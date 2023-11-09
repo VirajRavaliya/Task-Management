@@ -1,0 +1,35 @@
+// Run this command to add sequelize CLI
+=> npm install --save-dev sequelize-cli
+
+// Run this command to create blank project for migrations it will create following folders like config, models, migrations, seeders
+=> npx sequelize-cli init --force // After run this command change database name in config folder inside config.json file.
+
+// Run this command to create table migrations
+=> npx sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string // After run this command change updatedAt allowNull to true && add defaultValue: Sequelize.fn("NOW) in createdAt.
+=> create enum column like status:enum:'{1,2}'
+
+// Run this command for run migrations
+=> npx sequelize-cli db:migrate
+
+// Run this command for undo your migrations
+=> npx sequelize-cli db:migrate:undo
+
+// Run this command for undo single migration
+=> npx sequelize-cli db:migrate:undo --name MIGRATION_FILE_NAME
+
+// Run this command to create demo seeders file
+=> npx sequelize-cli seed:generate --name demo-user // Seeders file have many commands like addColumns, removeColumns, bulkInsert, bulkDelete, changeColumn
+
+// Run this command for run all seeders
+=> npx sequelize-cli db:seed:all
+
+// Run Single Seeders
+=> npx sequelize db:seed --seed SEEDERS_FILE_NAME
+
+// Undo Specific Seeders
+=> npx sequelize db:seed:undo --seed SEEDERS_FILE_NAME
+
+// Run this command for undo your seeders
+=> npx sequelize-cli db:migrate:undo
+
+ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
