@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
-const db = require("../models");
+const db = require("../models/index");
 const { createLogFile } = require("../utils/createLogs");
 
-const userModel = db.user;
+const userModel = db.users;
 
 module.exports = async (req, res, next) => {
   try {

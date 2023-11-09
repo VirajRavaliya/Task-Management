@@ -1,8 +1,5 @@
 const db = require("../models/index");
 const _ = require("lodash");
-const { Op, QueryTypes } = require("sequelize");
-const moment = require("moment");
-const dir_name = process.cwd();
 
 const {
   generateHashPassword,
@@ -67,7 +64,6 @@ module.exports.signUp = async (req, res) => {
       });
     }
   } catch (error) {
-    await t.rollback();
     createLogFile(
       "signUp",
       error,
@@ -75,6 +71,7 @@ module.exports.signUp = async (req, res) => {
       "user_controller",
       "controllers"
     );
+    await t.rollback();
     return res.json({
       status: false,
       message: error.message,
@@ -111,22 +108,20 @@ module.exports.logIn = async (req, res) => {
     }
 
     const token = await generateToken({ user_id: findUser?.id });
-
-    return {
+    return res.json({
       status: true,
       message: "User added successfully.",
       code: 200,
       data: { token: token },
-    };
+    });
   } catch (error) {
     createLogFile(
-      "updateUser",
+      "logIn",
       error,
       error?.stack,
       "user_controller",
       "controllers"
     );
-    await t.rollback();
     return res.json({
       status: false,
       message: error?.message,

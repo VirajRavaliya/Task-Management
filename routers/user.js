@@ -6,6 +6,7 @@ const {
   signUpVAL,
   loginVAL,
   taskVal,
+  addTaskVal,
   Validation,
 } = require("../middlewares/validations/user");
 
@@ -15,7 +16,7 @@ router.post("/logIn", loginVAL, Validation, userController.logIn);
 
 //task
 router.get("/get-task-list", userAuth, taskController.getTaskList);
-router.post("/add-task", userAuth, loginVAL, Validation, taskController.addTask);
+router.post("/add-task", userAuth, addTaskVal, Validation, taskController.addTask);
 router.post("/update-task", userAuth, taskVal, Validation, taskController.updateTask);
 router.post("/delete-task", userAuth, taskVal, Validation, taskController.deleteTask);
 

@@ -1,5 +1,6 @@
 const path = require("path");
 const date = require("date-and-time");
+const fs = require("fs");
 
 /**
  * This function will create a log file
@@ -26,7 +27,7 @@ module.exports.createLogFile = async (
 
   const formattedDate = date.format(currentDate, "MMMM D, YYYY, h:mm A");
 
-  const remote_address = DevMode == "local" ? "localhost" : DevMode;
+  const remote_address = "localhost";
 
   let mode = `Mode: ${remote_address} \n`;
   let datetime = `Date: ${formattedDate} \n`;
@@ -42,4 +43,3 @@ module.exports.createLogFile = async (
   fs.writeFileSync(path.join(logpath, file_name), log, { flag: "a" });
   return true;
 };
-

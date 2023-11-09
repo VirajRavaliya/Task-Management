@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
+const APP_SECRET = "task_management";
 
 module.exports.generateSalt = async () => {
   return bcrypt.genSalt();

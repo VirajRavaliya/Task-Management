@@ -1,6 +1,7 @@
 const db = require("../models/index");
 const _ = require("lodash");
 const { col } = require("sequelize");
+const { createLogFile } = require("../utils/createLogs");
 
 const userModel = db.users;
 const taskModel = db.users_task;
@@ -9,7 +10,7 @@ module.exports.getTaskList = async (req, res) => {
   try {
     const { user_id } = req?.user;
 
-    const getList = await taskModel.findOne({
+    const getList = await taskModel.findAll({
       where: { user_id: user_id },
       raw: true,
       include: {
@@ -23,10 +24,26 @@ module.exports.getTaskList = async (req, res) => {
         "description",
         [col("userData.first_name"), "first_name"],
         [col("userData.last_name"), "last_name"],
+        "createdAt",
+        "status"
       ],
     });
 
-    return res.json(getList);
+    if (!_.isEmpty(getList)) {
+      return res.json({
+        status: true,
+        mesaage: "Task data found successfully.",
+        code: 200,
+        data: getList,
+      });
+    } else {
+      return res.json({
+        status: false,
+        mesaage: "Task not found.",
+        code: 200,
+        data: [],
+      });
+    }
   } catch (error) {
     createLogFile(
       "getTaskList",
@@ -57,7 +74,7 @@ module.exports.addTask = async (req, res) => {
         await t.commit();
         return {
           status: true,
-          message: "User task added successfully.",
+          message: "Task added successfully.",
           code: 200,
         };
       })
@@ -72,14 +89,14 @@ module.exports.addTask = async (req, res) => {
 
     return res.json(addUser);
   } catch (error) {
-    await t.rollback();
     createLogFile(
-      "updateTask",
+      "addTask",
       error,
       error?.stack,
       "task_controller",
       "controllers"
     );
+    await t.rollback();
     return res.json({
       status: false,
       message: error.message,
@@ -105,7 +122,7 @@ module.exports.updateTask = async (req, res) => {
         await t.commit();
         return {
           status: true,
-          message: "User added successfully.",
+          message: "Task updated successfully.",
           code: 200,
         };
       })
@@ -145,13 +162,13 @@ module.exports.deleteTask = async (req, res) => {
       attributes: ["id"],
     });
 
-    if (!findTask) {
+    if (findTask) {
       const deleteTask = await taskModel
-        .destroy({ where: { id: findUser?.id } })
+        .destroy({ where: { id: task_id } })
         .then(async () => {
           return {
             status: true,
-            message: "User added successfully.",
+            message: "Task deleted successfully.",
             code: 200,
           };
         })
